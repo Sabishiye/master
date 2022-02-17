@@ -1,0 +1,33 @@
+
+
+CREATE COMPUTE MODULE flow_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CALL CopyMessageHeaders();
+		CALL CopyEntireMessage();
+		set Environment.Variable.Response.Financail.Item[1].type = 'income';
+		set Environment.Variable.Response.Financail.Item[1].amount = 0.00;
+		set Environment.Variable.Response.Financail.Item[1].lastupdate = '2016-07-20t09.00000-04.00';
+		set Environment.Variable.Response.Financail.Item[2].type = 'sale';
+		set Environment.Variable.Response.Financail.Item[2].amount = 0.00;
+		set Environment.Variable.Response.Financail.Item[2].lastupdate = '2016-07-20t09.00000-04.00';
+		set Environment.Variable.Response.Financail.Item[3].type = 'MonthlyIncome';
+		set Environment.Variable.Response.Financail.Item[3].amount = 0.00;
+		set Environment.Variable.Response.Financail.Item[3].lastupdate = '2016-07-20t09.00000-04.00';
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		SET OutputRoot = InputRoot;
+	END;
+END MODULE;
